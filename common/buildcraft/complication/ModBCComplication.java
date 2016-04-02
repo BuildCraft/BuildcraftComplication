@@ -3,16 +3,14 @@ package buildcraft.complication;
 import buildcraft.BuildCraftMod;
 import buildcraft.BuildCraftTransport;
 import buildcraft.transport.*;
-import buildcraft.transport.pipes.PipePowerDiamond;
-import buildcraft.transport.pipes.PipePowerGold;
-import buildcraft.transport.pipes.PipePowerIron;
-import buildcraft.transport.pipes.PipePowerStone;
+import buildcraft.transport.pipes.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -59,7 +57,9 @@ public class ModBCComplication extends BuildCraftMod {
         PipeTransportPower.lossMode = PipeTransportPower.LossMode.ABSOLUTE;
 
         PipeTransportPower.setPowerCapacity(PipePowerIronComplication.class, PipeTransportPower.powerCapacities.get(PipePowerIron.class));
+        PipeTransportPower.setPowerCapacity(PipePowerWoodComplication.class, 40960);
 
+        PipeTransportPower.setPowerLoss(PipePowerWoodComplication.class, 0F);
         PipeTransportPower.setPowerLoss(PipePowerStone.class, 0.25F);
         PipeTransportPower.setPowerLoss(PipePowerIronComplication.class, 2F);
         PipeTransportPower.setPowerLoss(PipePowerGold.class, 5F);
@@ -67,6 +67,13 @@ public class ModBCComplication extends BuildCraftMod {
 
         Map<Class<? extends Pipe<?>>,Class<? extends Pipe<?>>> replacementPipes = new HashMap<>();
         replacementPipes.put(PipePowerIron.class, PipePowerIronComplication.class);
+        replacementPipes.put(PipePowerWood.class, PipePowerWoodComplication.class);
+
+        Set<Class<? extends Pipe<?>>> removedPipes = new HashSet<>();
+        removedPipes.add(PipePowerCobblestone.class);
+        removedPipes.add(PipePowerQuartz.class);
+        removedPipes.add(PipePowerSandstone.class);
+        removedPipes.add(PipePowerEmerald.class);
 
         Iterator<IRecipe> iterator = CraftingManager.getInstance().getRecipeList().iterator();
 
@@ -77,8 +84,21 @@ public class ModBCComplication extends BuildCraftMod {
                 if (output != null && output.getItem() instanceof ItemPipe) {
                     ItemPipe pipeItem = (ItemPipe) output.getItem();
                     Class<? extends Pipe<?>> original = BlockGenericPipe.pipes.get(pipeItem);
+
                     if (replacementPipes.containsKey(original)) {
-                        BlockGenericPipe.pipes.put((ItemPipe) output.getItem(), replacementPipes.get(original));
+                        BlockGenericPipe.pipes.put(pipeItem, replacementPipes.get(original));
+
+                        Pipe dummyPipe = BlockGenericPipe.createPipe(pipeItem);
+                        if(dummyPipe != null) {
+                            pipeItem.setPipeIconIndex(dummyPipe.getIconIndexForItem());
+                            TransportProxy.proxy.setIconProviderFromPipe(pipeItem, dummyPipe);
+                        }
+                    } else if (removedPipes.contains(original)) {
+                        iterator.remove();
+                        pipeItem.setCreativeTab(null);
+                        pipeItem.setUnlocalizedName("removed");
+
+                        BlockGenericPipe.pipes.put(pipeItem, PipeStructureCobblestone.class);
 
                         Pipe dummyPipe = BlockGenericPipe.createPipe(pipeItem);
                         if(dummyPipe != null) {
@@ -89,5 +109,7 @@ public class ModBCComplication extends BuildCraftMod {
                 }
             }
         }
+
+        MinecraftForge.EVENT_BUS.register(proxy);
     }
 }
