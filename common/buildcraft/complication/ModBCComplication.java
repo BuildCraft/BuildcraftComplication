@@ -56,15 +56,18 @@ public class ModBCComplication extends BuildCraftMod {
         PipeTransportPower.canExplode = true;
         PipeTransportPower.lossMode = PipeTransportPower.LossMode.ABSOLUTE;
 
-        PipeTransportPower.setPowerCapacity(PipePowerIronComplication.class, PipeTransportPower.powerCapacities.get(PipePowerIron.class));
-        PipeTransportPower.setPowerCapacity(PipePowerWoodComplication.class, 40960);
         PipeTransportPower.setPowerCapacity(PipePowerIron.class, 640);
+        PipeTransportPower.setPowerCapacity(PipePowerDiamond.class, 10240);
+        PipeTransportPower.setPowerCapacity(PipePowerWoodComplication.class, 40960);
+        PipeTransportPower.setPowerCapacity(PipePowerIronComplication.class, PipeTransportPower.powerCapacities.get(PipePowerIron.class));
 
         PipeTransportPower.setPowerLoss(PipePowerWoodComplication.class, 0F);
         PipeTransportPower.setPowerLoss(PipePowerStone.class, 0.25F);
-        PipeTransportPower.setPowerLoss(PipePowerIronComplication.class, 2F);
+        PipeTransportPower.setPowerLoss(PipePowerIronComplication.class, 3F);
         PipeTransportPower.setPowerLoss(PipePowerGold.class, 5F);
-        PipeTransportPower.setPowerLoss(PipePowerDiamond.class, 3F);
+        PipeTransportPower.setPowerLoss(PipePowerDiamond.class, 0.5F);
+
+        PipeConnectionBans.banConnection(PipePowerWoodComplication.class);
 
         Map<Class<? extends Pipe<?>>,Class<? extends Pipe<?>>> replacementPipes = new HashMap<>();
         replacementPipes.put(PipePowerIron.class, PipePowerIronComplication.class);

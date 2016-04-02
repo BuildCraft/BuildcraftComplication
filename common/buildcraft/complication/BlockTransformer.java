@@ -79,8 +79,7 @@ public class BlockTransformer extends Block implements ITileEntityProvider {
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list) {
-        // Note: HIGH_EXTREME is not currently used
-        for (int i = 0; i <= 1; i++) {
+        for (int i = 0; i <= 2; i++) {
             list.add(new ItemStack(item, 1, getMetaFromState(getDefaultState().withProperty(VOLTAGE, EnumVoltage.VALUES[i]))));
         }
     }

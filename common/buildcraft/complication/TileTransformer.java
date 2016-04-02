@@ -13,7 +13,7 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 
 public class TileTransformer extends TileEntity implements ITickable, IEnergyHandler, IEnergyProvider, IEnergyReceiver {
-    private final int[] POWER_LEVELS = {320, 1280, 5120, 20480};
+    private final int[] POWER_LEVELS = {160, 640, 2560, 5120};
     private EnumFacing facing = EnumFacing.EAST;
     private boolean stepUp;
     private int power;
