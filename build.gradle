@@ -1,0 +1,101 @@
+// DON'T TOUCH THE BUILDSCRIPT[] BLOCK
+// its special, and it is only there to make ForgeGradle work correctly.
+
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
+    }
+}
+repositories {
+  maven {
+    url "http://dvs1.progwml6.com/files/maven"
+  }
+}
+
+repositories {
+    // JEI
+    maven {
+        url "http://dvs1.progwml6.com/files/maven"
+    }
+}
+
+apply plugin: "net.minecraftforge.gradle.forge" // adds the forge dependency
+apply plugin: 'maven' // for uploading to a maven repo
+
+ext.configFile = file "build.properties"
+configFile.withReader {
+    // Load config. It shall from now be referenced as simply config or project.config
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+version = config.mod_version
+group = "com.mod-buildcraft.complication"
+archivesBaseName = "buildcraft-complication" // the name that all artifacts will use as a base. artifacts names follow this pattern: [baseName]-[appendix]-[version]-[classifier].[extension]
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+minecraft {
+    version = config.mc_version + "-" + config.forge_version
+    runDir = "run"
+
+    // the mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   snapshot are built nightly.
+    // stable_#            stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not allways work.
+    // simply re-run your setup task after changing the mappings to update your workspace.
+    mappings = config.mappings_version
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+
+    // replacing stuff in the source
+    replace '@VERSION@', project.version
+    replace '@MC_VERSION@', version
+
+    useDepAts = true
+}
+
+// configure  the source folders
+sourceSets {
+    main {
+        java {
+            srcDir "common"
+        }
+        resources {
+            srcDir "resources"
+        }
+    }
+}
+
+processResources {
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        // ${version}   and    ${mcversion}    are the exact strings being replaced
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
+
+    // copy everything else, that's not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
