@@ -58,6 +58,7 @@ public class ModBCComplication extends BuildCraftMod {
 
         PipeTransportPower.setPowerCapacity(PipePowerIronComplication.class, PipeTransportPower.powerCapacities.get(PipePowerIron.class));
         PipeTransportPower.setPowerCapacity(PipePowerWoodComplication.class, 40960);
+        PipeTransportPower.setPowerCapacity(PipePowerIron.class, 640);
 
         PipeTransportPower.setPowerLoss(PipePowerWoodComplication.class, 0F);
         PipeTransportPower.setPowerLoss(PipePowerStone.class, 0.25F);
