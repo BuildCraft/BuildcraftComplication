@@ -1,11 +1,11 @@
 [
 {
-  "modid": "BuildCraft|Compat",
-  "name": "BuildCraft Compat",
+  "modid": "buildcraftcomplication",
+  "name": "BuildCraft Complication",
   "version": "$version",
   "mcversion": "$mcversion",
-  "description": "Compatibility add-on for BuildCraft",
-  "credits": "Created by asie",
+  "description": "BuildCraft April Fools 2016, now an addon!",
+  "credits": "Created by asie and AlexIIL",
   "url": "http://www.mod-buildcraft.com/",
   "updateUrl": "",
   "authorList": [ "asie", "BuildCraft Team" ],
