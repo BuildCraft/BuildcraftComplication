@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -30,6 +31,9 @@ public class ModBCComplication extends BuildCraftMod {
     @Mod.Instance("buildcraftcomplication")
     public static ModBCComplication instance;
 
+    @SidedProxy(clientSide = "buildcraft.complication.ProxyClient", serverSide = "buildcraft.complication.ProxyCommon")
+    private static ProxyCommon proxy;
+
     public static BlockTransformer transformer;
 
     @Mod.EventHandler
@@ -37,6 +41,8 @@ public class ModBCComplication extends BuildCraftMod {
         transformer = new BlockTransformer(Material.iron);
         transformer.setUnlocalizedName("bccomplication.transformer");
         GameRegistry.registerBlock(transformer, ItemTransformer.class, "transformer");
+
+        proxy.preInit();
     }
 
     @Mod.EventHandler
